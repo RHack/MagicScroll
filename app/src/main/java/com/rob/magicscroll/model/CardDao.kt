@@ -1,18 +1,23 @@
 package com.rob.magicscroll.model
 
 import androidx.room.*
+import com.rob.magicscroll.model.entities.CardEntity
+import com.rob.magicscroll.model.entities.CardEntityList
 import io.reactivex.Single
 
 @Dao
 interface CardDao {
-    @Query("SELECT * FROM card_items")
-    fun getAllCards(): Single<List<CardEntity>>
+    @Query("SELECT * FROM cardList")
+    fun getAllCards(): Single<CardEntityList>
 
-    @Query("SELECT * FROM card_items WHERE cardName LIKE :cardName")
+    @Query("SELECT COUNT(cardEntities) FROM cardList")
+    fun countCards() : Int
+
+    @Query("SELECT * FROM cards WHERE name LIKE :cardName")
     fun findCardByName(cardName: String): CardEntity
 
     @Insert
-    fun insertAllCards(vararg cards: List<CardEntity>)
+    fun insertAllCards(cards: CardEntityList)
 
     @Delete
     fun deleteCard(card: CardEntity)
