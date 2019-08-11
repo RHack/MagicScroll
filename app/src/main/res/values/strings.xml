@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MagicScroll</string>
     <string name="loading_text">Loading...</string>
+    <string name="card_dialog_dismiss">Back</string>
 </resources>

@@ -4,13 +4,9 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rob.magicscroll.R
 import com.rob.magicscroll.model.entities.CardEntity
-import com.rob.magicscroll.viewModel.CardList
-import io.reactivex.Observable
 import kotlinx.android.synthetic.main.list_item_card.view.*
 
 class CardListAdapter(private val cards: List<CardEntity>) :
@@ -61,7 +57,7 @@ class CardListAdapter(private val cards: List<CardEntity>) :
             cardNameTv.text = card.name
 //            cardImage.setImageSrc(card.cardImageUrl)
             setOnClickListener {
-                val intent = Intent(context, CardDetailActivity::class.java)
+                val intent = Intent(context, CardDetailDialog::class.java)
 //                intent.putExtra("Card", card)
                 context.startActivity(intent)
             }

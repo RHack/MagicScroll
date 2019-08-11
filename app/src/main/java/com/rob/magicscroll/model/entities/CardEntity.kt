@@ -4,14 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import com.google.gson.annotations.SerializedName
-import com.rob.magicscroll.model.entities.ForeignNameEntity
-import com.rob.magicscroll.model.entities.RulingEntity
-import com.rob.magicscroll.model.ListConverter
 
 @Entity(tableName = "cards")
 class CardEntity{
-//    @PrimaryKey(autoGenerate = true)
-
     @SerializedName("name")
     var name: String? = null
     @SerializedName("names")
@@ -65,16 +60,6 @@ class CardEntity{
     @PrimaryKey
     @SerializedName("id")
     var id: String = ""
+
 }
 
-class Converters {
-    @TypeConverter
-    fun convertListToString(values: List<String>): String {
-        return values.joinToString()
-    }
-
-    @TypeConverter
-    fun convertStringToList(values: String): List<String> {
-        return values.split(", ")
-    }
-}
