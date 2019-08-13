@@ -60,6 +60,5 @@ class CardEntity{
     @PrimaryKey
     @SerializedName("id")
     var id: String = ""
-
 }
 

@@ -16,6 +16,7 @@ import com.rob.magicscroll.model.entities.MockCardEntity
 import com.rob.magicscroll.viewModel.CardList
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import java.net.ConnectException
 import java.net.UnknownHostException
 
@@ -24,12 +25,10 @@ class CardListActivity : AppCompatActivity() {
     val cardListViewModel = App.injectCardListViewModel()
     val cards : List<CardEntity> = emptyList()
 
-    var allCards : List<MockCardEntity> = emptyList()
-
     val cardNames = arrayOf("a", "b", "c", "d", "e", "1", "2","3", "4", "5", "6", "7", "8", "9", "10")
     private lateinit var recyclerView: RecyclerView
     private lateinit var  linearLayoutManager: LinearLayoutManager
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewAdapter: CardListAdapter
 
 
     fun subscribe(disposable: Disposable): Disposable {
@@ -41,12 +40,18 @@ class CardListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_card_list)
-
+        subscribe(cardListViewModel.getCards().subscribeOn(Schedulers.io())
+            .subscribe({
+                showCards(it)
+            }, {
+                Log.e("Error","Something went wrong")
+            }
+            ))
         linearLayoutManager = LinearLayoutManager(this)
-        val viewAdapter = DummyAdapter(allCards)
-        viewAdapter.setOnCardClickListener(object: DummyAdapter.ClickListener {
+//        viewAdapter = CardListAdapter(cards)
+        viewAdapter.setOnCardClickListener(object: CardListAdapter.ClickListener {
             override fun onClick(pos: Int, view: View) {
-                val clickedCard = allCards[pos]
+                val clickedCard = cards[pos]
                 val cardId = clickedCard.id
                 val builder = AlertDialog.Builder(parent)
                 builder.setTitle("wooo")
@@ -56,21 +61,17 @@ class CardListActivity : AppCompatActivity() {
                 dialog.show()
             }
         })
-//        viewAdapter = CardListAdapter(cards)
-//        subscribe(cardListViewModel.getCards().subscribeOn(Schedulers.io())
-//            .subscribe({
-//                showCards(it)
-//            }, {
-//                Log.e("Error","Something went wrong")
-//            }
-//            ))
 
         recyclerView = findViewById<RecyclerView>(R.id.card_list_rv).apply {
             setHasFixedSize(true)
 
-            layoutManager = linearLayoutManager
             adapter = viewAdapter
+            layoutManager = linearLayoutManager
         }
+//        viewAdapter = CardListAdapter(cards)
+
+
+
 
     }
 

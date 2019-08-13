@@ -1,69 +1,73 @@
 package com.rob.magicscroll.view
 
-import android.content.Intent
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.rob.magicscroll.R
 import com.rob.magicscroll.model.entities.CardEntity
 import kotlinx.android.synthetic.main.list_item_card.view.*
 
 class CardListAdapter(private val cards: List<CardEntity>) :
-//class CardListAdapter(private val cards: Observable<CardList>) :
     RecyclerView.Adapter<CardListAdapter.ViewHolder>() {
-    private var currentList : List<CardEntity> = listOf()
-
-
-
-    companion object {
-        private const val TYPE_CHARACTER = 0
-        private const val TYPE_FOOTER = 1
-    }
-
     override fun getItemCount() = cards.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-//        return when (viewType) {
-//            TYPE_CHARACTER -> ViewHolder(parent.inflate(R.layout.list_item_card))
-//            TYPE_FOOTER -> ViewHolder(parent.inflate(R.layout.list_item_loading))
-//            else -> throw RuntimeException("viewType $viewType doesn't exist.")
-//        }
-        val inflatedView = parent.inflate(R.layout.list_item_card)
-        return ViewHolder(inflatedView)
+    lateinit var clickListener: ClickListener
+
+    fun setOnCardClickListener(newClickListener: ClickListener) {
+        clickListener = newClickListener
     }
 
     private fun ViewGroup.inflate(layoutRes: Int): View {
         return LayoutInflater.from(context).inflate(layoutRes, this, false)
     }
 
+    interface ClickListener {
+        fun onClick(pos: Int, view: View)
+    }
+
+    inner class ViewHolder(val card: ConstraintLayout) : RecyclerView.ViewHolder(card), View.OnClickListener{
+        override fun onClick(v: View) {
+            clickListener.onClick(adapterPosition, v)
+        }
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        fun bind() = with(card) {
+            card.card_name.text = cards[adapterPosition].name
+            card.card_image.setImageResource(R.drawable.default_card)
+//            itemView.setOnClickListener(this)
+        }
+    }
+
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val context = parent.context
+        val card = LayoutInflater.from(context).inflate(R.layout.list_item_card, parent, false)
+                as ConstraintLayout
+
+
+        parent.setOnClickListener {
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle("wooo")
+            builder.setView(R.layout.dialog_card)
+            builder.setPositiveButton("yeaah!", DialogInterface.OnClickListener { dialog, whichButton -> dialog.dismiss()})
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+        return ViewHolder(card)
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (position == itemCount - 1) {
-            holder.bind()
-        } else {
-            holder.bind(cards.elementAt(position))
-        }
+        holder.card.card_name.text = cards[position].name
+        holder.card.card_image.setImageResource(R.drawable.default_card)
+
+        holder.bind()
     }
 
 
-
-    class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
-
-        val viewItem = view
-        var cardNameTv = viewItem.card_name
-        var cardImage = viewItem.card_image
-
-        fun bind(card: CardEntity) = with(viewItem) {
-            cardNameTv.text = card.name
-//            cardImage.setImageSrc(card.cardImageUrl)
-            setOnClickListener {
-                val intent = Intent(context, CardDetailDialog::class.java)
-//                intent.putExtra("Card", card)
-                context.startActivity(intent)
-            }
-        }
-        fun bind() = with(viewItem) {
-
-        }
-    }
 }

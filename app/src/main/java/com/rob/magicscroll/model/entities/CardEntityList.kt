@@ -9,7 +9,6 @@ import com.rob.magicscroll.model.entities.CardEntity
 @Entity(tableName = "cardList")
 class CardEntityList {
     @PrimaryKey
-    @NonNull
     @SerializedName("cardEntities")
-    var cardEntities: List<CardEntity>? = null
+    var cardEntities: List<CardEntity> = emptyList()
 }

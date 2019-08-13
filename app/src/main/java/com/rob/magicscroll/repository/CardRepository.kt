@@ -12,30 +12,35 @@ class CardRepository(private val cardApi: CardApi, private val cardDao: CardDao)
 
 
 //    val shared = CardRepository(cardApi, cardDao)
-    var cardList: List<MockCardEntity> = emptyList()
+    var cardList: CardEntityList = CardEntityList()
+    var cardListObservable: Observable<CardEntityList> = Observable.empty()
     init{
         this.makeDummyCardList()
     }
 
     fun makeDummyCardList() {
-        val cardNames = mutableListOf("card 1", "card 2", "card 3")
+        val cardNames = mutableListOf("card 1", "card 2", "card 3", "card 4", "card 5", "card 6",
+            "card 7", "card8", "card 9", "card 10")
 
         var count = 1
         for (cardName in cardNames) {
-            val newCard = MockCardEntity(count, cardName)
+            val newCard = CardEntity()
+            newCard.id = count.toString()
+            newCard.name = cardName
 
-            cardList += newCard
+            cardList.cardEntities = cardList.cardEntities?.plusElement(newCard)
             count++
         }
+        cardListObservable = Observable.fromArray(cardList)
     }
 
-    fun getAllCards() : List<MockCardEntity> {
-        return cardList
+    fun getAllCards() : Observable<CardEntityList> {
+        return cardListObservable
     }
 
-    fun getCard(id: Int) : MockCardEntity? {
-        for (card in cardList) {
-            if(card.id == id) {
+    fun getCard(id: Int) : CardEntity? {
+        for (card in cardList.cardEntities!!) {
+            if(card.id.toInt() == id) {
                 return card
             }
         }
@@ -70,47 +75,3 @@ class CardRepository(private val cardApi: CardApi, private val cardDao: CardDao)
 
 
 }
-
-//// so pretend that's what u got.  every other properties are just optional
-//class CardEntity{
-//    var id: Int = "" // Make this a numeric?
-//    var name: String? = null
-//
-//    public CardEntity (Int id, String name) {
-//        self.id = id
-//        self.name = name
-//    }
-//}
-//
-//// now in your repository
-//class CardRepository {
-//    // no inheritence/injection for now
-//    let cardList: [CardEntity] = []
-//
-//    init() {
-//        self.cardList = self.makeDummyCardList()
-//    }
-//
-//    func makeDummyCardList() -> [CardEntity] {
-//        let cardNames: [String] = ["Card 1",
-//            "Card 2",
-//            "Card 3"]
-//        var cardList: [CardEntity] = []
-//        var count = 1
-//        for cardName in cardNames {
-//            let newCard = CardEntity(id: count, name: cardName)
-//            cardList.append(newCard)
-//            count += 1
-//        }
-//
-//        return cardList
-//    }
-//
-//    func getAllCards() -> [cardList] {
-//        return self.cardList
-//    }
-//
-//    func getCard(id: Int) -> CArdEntity {
-//        for card in self.cardList
-//    }
-//}
