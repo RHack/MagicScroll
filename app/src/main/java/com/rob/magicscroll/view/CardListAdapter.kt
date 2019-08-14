@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior.setTag
 import androidx.recyclerview.widget.RecyclerView
 import com.rob.magicscroll.R
 import com.rob.magicscroll.model.entities.CardEntity
@@ -26,12 +27,12 @@ class CardListAdapter(private val cards: List<CardEntity>) :
     }
 
     interface ClickListener {
-        fun onClick(pos: Int, view: View)
+        fun onClick(pos: Int, view: View, card: CardEntity)
     }
 
     inner class ViewHolder(val card: ConstraintLayout) : RecyclerView.ViewHolder(card), View.OnClickListener{
         override fun onClick(v: View) {
-            clickListener.onClick(adapterPosition, v)
+            clickListener.onClick(card.tag as Int, v, cards[adapterPosition])
         }
         init {
             itemView.setOnClickListener(this)
@@ -50,13 +51,12 @@ class CardListAdapter(private val cards: List<CardEntity>) :
         val card = LayoutInflater.from(context).inflate(R.layout.list_item_card, parent, false)
                 as ConstraintLayout
 
-
         parent.setOnClickListener {
             val builder = AlertDialog.Builder(context)
-            builder.setTitle("wooo")
+            builder.setTitle("weee")
             builder.setView(R.layout.dialog_card)
             builder.setPositiveButton("yeaah!", DialogInterface.OnClickListener { dialog, whichButton -> dialog.dismiss()})
-            val dialog: AlertDialog = builder.create()
+            val dialog = builder.create()
             dialog.show()
         }
         return ViewHolder(card)
@@ -66,6 +66,7 @@ class CardListAdapter(private val cards: List<CardEntity>) :
         holder.card.card_name.text = cards[position].name
         holder.card.card_image.setImageResource(R.drawable.default_card)
 
+        holder.card.tag = position
         holder.bind()
     }
 

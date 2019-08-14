@@ -21,12 +21,12 @@ class CardDetailDialog(activity: Activity) : AlertDialog(activity) {
         val cardView = R.layout.dialog_card
         cardDialog.setContentView(cardView)
         var cardNameTv = cardDialog.findViewById<TextView>(R.id.dialog_card_name)
-        var cardManaCostTv = cardDialog.findViewById<TextView>(R.id.dialog_card_mana_cost)
+//        var cardManaCostTv = cardDialog.findViewById<TextView>(R.id.dialog_card_mana_cost)
         var cardImageImg = cardDialog.findViewById<ImageView>(R.id.dialog_card_image)
-        var cardDescriptionTv = cardDialog.findViewById<TextView>(R.id.dialog_card_description)
+//        var cardDescriptionTv = cardDialog.findViewById<TextView>(R.id.dialog_card_description)
         cardNameTv.text = card.name
-        cardManaCostTv.text = card.manaCost
-        cardDescriptionTv.text = card.text
+//        cardManaCostTv.text = card.manaCost
+//        cardDescriptionTv.text = card.text
     }
 
     val builder: AlertDialog.Builder = activity?.let {

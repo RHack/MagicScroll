@@ -6,7 +6,6 @@ import com.rob.magicscroll.model.CardDao
 import com.rob.magicscroll.model.entities.CardEntity
 import com.rob.magicscroll.remote.CardApi
 import com.rob.magicscroll.model.entities.CardEntityList
-import com.rob.magicscroll.model.entities.MockCardEntity
 
 class CardRepository(private val cardApi: CardApi, private val cardDao: CardDao) {
 

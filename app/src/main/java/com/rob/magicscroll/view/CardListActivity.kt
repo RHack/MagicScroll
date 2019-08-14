@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,9 @@ import com.rob.magicscroll.viewModel.CardList
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.dialog_card.*
+import kotlinx.android.synthetic.main.dialog_card.view.*
+import kotlinx.android.synthetic.main.list_item_card.view.*
 import java.net.ConnectException
 import java.net.UnknownHostException
 
@@ -25,9 +29,8 @@ class CardListActivity : AppCompatActivity() {
     val cardListViewModel = App.injectCardListViewModel()
     val cards : List<CardEntity> = emptyList()
 
-    val cardNames = arrayOf("a", "b", "c", "d", "e", "1", "2","3", "4", "5", "6", "7", "8", "9", "10")
     private lateinit var recyclerView: RecyclerView
-    private lateinit var  linearLayoutManager: LinearLayoutManager
+    private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var viewAdapter: CardListAdapter
 
 
@@ -39,6 +42,7 @@ class CardListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val context = this
         setContentView(R.layout.activity_card_list)
         subscribe(cardListViewModel.getCards().subscribeOn(Schedulers.io())
             .subscribe({
@@ -50,12 +54,13 @@ class CardListActivity : AppCompatActivity() {
         linearLayoutManager = LinearLayoutManager(this)
 //        viewAdapter = CardListAdapter(cards)
         viewAdapter.setOnCardClickListener(object: CardListAdapter.ClickListener {
-            override fun onClick(pos: Int, view: View) {
-                val clickedCard = cards[pos]
-                val cardId = clickedCard.id
-                val builder = AlertDialog.Builder(parent)
-                builder.setTitle("wooo")
-                builder.setView(R.layout.dialog_card)
+            override fun onClick(pos: Int, view: View, card: CardEntity) {
+                val builder = AlertDialog.Builder(context)
+                val inflater = layoutInflater
+                val dialogLayout = inflater.inflate(R.layout.dialog_card, null)
+                dialogLayout.dialog_card_name.text = card.name
+                builder.setTitle("")
+                builder.setView(dialogLayout)
                 builder.setPositiveButton("yeaah!", DialogInterface.OnClickListener { dialog, whichButton -> dialog.dismiss()})
                 val dialog: AlertDialog = builder.create()
                 dialog.show()
@@ -68,21 +73,11 @@ class CardListActivity : AppCompatActivity() {
             adapter = viewAdapter
             layoutManager = linearLayoutManager
         }
-//        viewAdapter = CardListAdapter(cards)
-
-
-
-
     }
 
     fun showCards(cardList: CardList) {
         if (cardList.error == null) {
             viewAdapter = CardListAdapter(cardList.cards)
-//            viewAdapter = carCardListAdapter(cards)
-//            {
-
-//                Toast.makeText(this, "${it.cardName} Clicked", Toast.LENGTH_LONG).show()
-//            }
         } else if (cardList.error is ConnectException || cardList.error is UnknownHostException) {
             Log.e("Network Error", "Connection Lost", cardList.error)
         } else {
