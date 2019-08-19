@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rob.magicscroll.App
@@ -15,6 +16,8 @@ import com.rob.magicscroll.R
 import com.rob.magicscroll.model.entities.CardEntity
 import com.rob.magicscroll.model.entities.MockCardEntity
 import com.rob.magicscroll.viewModel.CardList
+import com.rob.magicscroll.viewModel.CardListViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -31,7 +34,7 @@ class CardListActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var viewAdapter: CardListAdapter
+    private var viewAdapter: CardListAdapter = CardListAdapter(this, emptyList())
 
 
     fun subscribe(disposable: Disposable): Disposable {
@@ -44,13 +47,15 @@ class CardListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val context = this
         setContentView(R.layout.activity_card_list)
-        subscribe(cardListViewModel.getCards().subscribeOn(Schedulers.io())
+        subscribe(cardListViewModel.getCards()
+            .subscribeOn(Schedulers.io())
+            .subscribeOn(AndroidSchedulers.mainThread())
             .subscribe({
+                Log.i("Success", "${it.cards}")
                 showCards(it)
             }, {
-                Log.e("Error","Something went wrong")
-            }
-            ))
+                Log.e("Error 58", it.localizedMessage)
+            }))
         linearLayoutManager = LinearLayoutManager(this)
 //        viewAdapter = CardListAdapter(cards)
         viewAdapter.setOnCardClickListener(object: CardListAdapter.ClickListener {
@@ -77,7 +82,7 @@ class CardListActivity : AppCompatActivity() {
 
     fun showCards(cardList: CardList) {
         if (cardList.error == null) {
-            viewAdapter = CardListAdapter(cardList.cards)
+            recyclerView.adapter = CardListAdapter(this, cardList.cards)
         } else if (cardList.error is ConnectException || cardList.error is UnknownHostException) {
             Log.e("Network Error", "Connection Lost", cardList.error)
         } else {

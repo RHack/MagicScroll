@@ -8,7 +8,7 @@ import io.reactivex.Single
 @Dao
 interface CardDao {
     @Query("SELECT * FROM cardList")
-    fun getAllCards(): Single<CardEntityList>
+    fun getCards(): Single<CardEntityList>
 
     @Query("SELECT COUNT(cardEntities) FROM cardList")
     fun countCards() : Int

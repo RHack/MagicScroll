@@ -1,14 +1,12 @@
 package com.rob.magicscroll.model.entities
 
-import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import com.rob.magicscroll.model.entities.CardEntity
 
 @Entity(tableName = "cardList")
-class CardEntityList {
+data class CardEntityList(
     @PrimaryKey
-    @SerializedName("cardEntities")
-    var cardEntities: List<CardEntity> = emptyList()
-}
+    @SerializedName("cards")
+    var cardEntities: List<CardEntity>
+)

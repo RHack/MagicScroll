@@ -1,6 +1,7 @@
 package com.rob.magicscroll.view
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,7 @@ import com.rob.magicscroll.R
 import com.rob.magicscroll.model.entities.CardEntity
 import kotlinx.android.synthetic.main.list_item_card.view.*
 
-class CardListAdapter(private val cards: List<CardEntity>) :
+class CardListAdapter(private val context: Context, private val cards: List<CardEntity>) :
     RecyclerView.Adapter<CardListAdapter.ViewHolder>() {
     override fun getItemCount() = cards.size
 
@@ -47,7 +48,6 @@ class CardListAdapter(private val cards: List<CardEntity>) :
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val context = parent.context
         val card = LayoutInflater.from(context).inflate(R.layout.list_item_card, parent, false)
                 as ConstraintLayout
 

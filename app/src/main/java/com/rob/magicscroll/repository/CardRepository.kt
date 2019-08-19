@@ -1,5 +1,6 @@
 package com.rob.magicscroll.repository
 
+import android.util.Log
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import com.rob.magicscroll.model.CardDao
@@ -11,7 +12,7 @@ class CardRepository(private val cardApi: CardApi, private val cardDao: CardDao)
 
 
 //    val shared = CardRepository(cardApi, cardDao)
-    var cardList: CardEntityList = CardEntityList()
+    var cardList: CardEntityList = CardEntityList(emptyList())
     var cardListObservable: Observable<CardEntityList> = Observable.empty()
     init{
         this.makeDummyCardList()
@@ -23,9 +24,9 @@ class CardRepository(private val cardApi: CardApi, private val cardDao: CardDao)
 
         var count = 1
         for (cardName in cardNames) {
-            val newCard = CardEntity()
-            newCard.id = count.toString()
-            newCard.name = cardName
+            val newCard = CardEntity(cardName, count.toString())
+//            newCard.id = count.toString()
+//            newCard.name = cardName
 
             cardList.cardEntities = cardList.cardEntities?.plusElement(newCard)
             count++
@@ -34,7 +35,7 @@ class CardRepository(private val cardApi: CardApi, private val cardDao: CardDao)
     }
 
     fun getAllCards() : Observable<CardEntityList> {
-        return cardListObservable
+        return getCards()
     }
 
     fun getCard(id: Int) : CardEntity? {
@@ -48,7 +49,8 @@ class CardRepository(private val cardApi: CardApi, private val cardDao: CardDao)
 
     fun getCards(): Observable<CardEntityList> {
         return Observable.concatArray(
-            getCardsFromDb(),
+//            cardListObservable
+//            getCardsFromDb(),
             getCardsFromApi()
         )
     }
@@ -58,18 +60,24 @@ class CardRepository(private val cardApi: CardApi, private val cardDao: CardDao)
     }
 
     fun getCardsFromDb(): Observable<CardEntityList> {
-        return cardDao.getAllCards().filter { it != null }.toObservable()
+        return cardDao.getCards().filter { it != null }.toObservable()
     }
 
     fun getCardsFromApi(): Observable<CardEntityList> {
-        return cardApi.getCards().doOnNext { storeCardsInDb(it) }
+        return cardApi.getCards().map{it}
+//        return cardApi.getCards().map{it}.doOnNext { storeCardsInDb(it) }
     }
 
     fun storeCardsInDb(cards: CardEntityList) {
         Observable.fromCallable { cardDao.insertAllCards(cards) }
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
-            .subscribe()
+            .subscribe ({
+                Log.i("Success", "${cards.cardEntities[0].name}")
+            }, {
+                Log.e("Error", it.localizedMessage)
+            }
+        )
     }
 
 
