@@ -47,17 +47,15 @@ class CardListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val context = this
         setContentView(R.layout.activity_card_list)
-        subscribe(cardListViewModel.getCards()
-            .subscribeOn(Schedulers.io())
-            .subscribeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                Log.i("Success", "${it.cards}")
-                showCards(it)
-            }, {
-                Log.e("Error 58", it.localizedMessage)
-            }))
+
         linearLayoutManager = LinearLayoutManager(this)
 //        viewAdapter = CardListAdapter(cards)
+        recyclerView = findViewById<RecyclerView>(R.id.card_list_rv).apply {
+            setHasFixedSize(true)
+
+            adapter = viewAdapter
+            layoutManager = linearLayoutManager
+        }
         viewAdapter.setOnCardClickListener(object: CardListAdapter.ClickListener {
             override fun onClick(pos: Int, view: View, card: CardEntity) {
                 val builder = AlertDialog.Builder(context)
@@ -72,12 +70,22 @@ class CardListActivity : AppCompatActivity() {
             }
         })
 
-        recyclerView = findViewById<RecyclerView>(R.id.card_list_rv).apply {
-            setHasFixedSize(true)
 
-            adapter = viewAdapter
-            layoutManager = linearLayoutManager
-        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        subscribe(cardListViewModel.getCards()
+            .subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Log.i("Success", "${it.cards}")
+                showCards(it)
+            }, {
+                Log.e("Error 58", it.localizedMessage)
+            })
+        )
     }
 
     fun showCards(cardList: CardList) {

@@ -3,14 +3,16 @@ package com.rob.magicscroll.view
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior.setTag
 import androidx.recyclerview.widget.RecyclerView
 import com.rob.magicscroll.R
 import com.rob.magicscroll.model.entities.CardEntity
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_item_card.view.*
 
 class CardListAdapter(private val context: Context, private val cards: List<CardEntity>) :
@@ -18,6 +20,7 @@ class CardListAdapter(private val context: Context, private val cards: List<Card
     override fun getItemCount() = cards.size
 
     lateinit var clickListener: ClickListener
+
 
     fun setOnCardClickListener(newClickListener: ClickListener) {
         clickListener = newClickListener
@@ -31,17 +34,18 @@ class CardListAdapter(private val context: Context, private val cards: List<Card
         fun onClick(pos: Int, view: View, card: CardEntity)
     }
 
-    inner class ViewHolder(val card: ConstraintLayout) : RecyclerView.ViewHolder(card), View.OnClickListener{
+    inner class ViewHolder(val card: ConstraintLayout) : RecyclerView.ViewHolder(card), View.OnClickListener {
         override fun onClick(v: View) {
             clickListener.onClick(card.tag as Int, v, cards[adapterPosition])
         }
+
         init {
             itemView.setOnClickListener(this)
         }
 
         fun bind() = with(card) {
-            card.card_name.text = cards[adapterPosition].name
-            card.card_image.setImageResource(R.drawable.default_card)
+            //            card.card_name.text = cards[adapterPosition].name
+//            loadImage(cards[adapterPosition].imageUrl, card.card_image)
 //            itemView.setOnClickListener(this)
         }
     }
@@ -55,19 +59,40 @@ class CardListAdapter(private val context: Context, private val cards: List<Card
             val builder = AlertDialog.Builder(context)
             builder.setTitle("weee")
             builder.setView(R.layout.dialog_card)
-            builder.setPositiveButton("yeaah!", DialogInterface.OnClickListener { dialog, whichButton -> dialog.dismiss()})
+            builder.setPositiveButton(
+                "yeaah!",
+                DialogInterface.OnClickListener { dialog, whichButton -> dialog.dismiss() })
             val dialog = builder.create()
             dialog.show()
         }
         return ViewHolder(card)
     }
 
+    fun convertToHttps(imageUrl: String?) : String? {
+        return if (imageUrl?.substring(5) == "https") {
+            imageUrl
+        } else {
+            imageUrl?.replace("http", "https")
+        }
+    }
+
+    fun loadImage(cardImage: ImageView, imageUrl: String?) {
+        Picasso.get()
+            .load(convertToHttps(imageUrl))
+            .resize(100, 200)
+            .centerInside()
+            .placeholder(R.drawable.default_card)
+            .into(cardImage)
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.card.card_name.text = cards[position].name
-        holder.card.card_image.setImageResource(R.drawable.default_card)
+        loadImage(holder.card.card_image, cards[position].imageUrl)
+
+        Log.i("${holder.card.card_name.text}: ", "${cards[position].imageUrl}")
 
         holder.card.tag = position
-        holder.bind()
+//        holder.bind()
     }
 
 

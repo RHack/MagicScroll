@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
 @Entity(tableName = "cards")
 data class CardEntity(
     @SerializedName("name")
-    val name: String,
+    val name: String?,
 //    @SerializedName("names")
 //    var names: List<String>? = null
 //    @SerializedName("manaCost")
@@ -45,8 +45,8 @@ data class CardEntity(
 //    var layout: String? = null
 //    @SerializedName("multiverseid")
 //    var multiverseid: Int? = null
-//    @SerializedName("imageUrl")
-//    var imageUrl: String? = null
+    @SerializedName("imageUrl")
+    val imageUrl: String?,
 //    @SerializedName("rulings")
 //    var rulings: List<RulingEntity>? = null
 //    @SerializedName("foreignNames")

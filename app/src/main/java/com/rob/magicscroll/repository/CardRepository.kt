@@ -24,7 +24,7 @@ class CardRepository(private val cardApi: CardApi, private val cardDao: CardDao)
 
         var count = 1
         for (cardName in cardNames) {
-            val newCard = CardEntity(cardName, count.toString())
+            val newCard = CardEntity(cardName,null, count.toString())
 //            newCard.id = count.toString()
 //            newCard.name = cardName
 

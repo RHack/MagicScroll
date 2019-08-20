@@ -17,7 +17,6 @@
 
     <ImageView
         android:id="@+id/card_image"
-        android:src="@mipmap/default_card"
         android:layout_width="100dp"
         android:layout_height="200dp"
         app:layout_constraintStart_toEndOf="@id/card_name"
