@@ -14,10 +14,10 @@ fun convertToHttps(imageUrl: String?): String? {
 }
 
 // Load images from their url into the given imageView
-fun loadImage(cardImage: ImageView, imageUrl: String?) {
+fun loadImage(cardImage: ImageView, imageUrl: String?, size: Int) {
     Picasso.get()
         .load(convertToHttps(imageUrl))
-        .resize(100, 200)
+        .resize(size, size*2)
         .centerInside()
         .placeholder(R.drawable.default_card)
         .into(cardImage)

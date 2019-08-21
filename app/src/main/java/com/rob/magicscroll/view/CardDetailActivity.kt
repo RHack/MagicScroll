@@ -28,7 +28,7 @@ class CardDetailActivity : AppCompatActivity() {
 
         cardNameTextView.text = cardName
         cardManaCostTextView.text = cardManaCost
-        loadImage(cardImageImageView, cardImage)
+        loadImage(cardImageImageView, cardImage, 700)
         cardTextTextView.text = cardText
     }
 }
