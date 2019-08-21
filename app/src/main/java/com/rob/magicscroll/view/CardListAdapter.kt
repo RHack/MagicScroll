@@ -5,13 +5,10 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.rob.magicscroll.R
 import com.rob.magicscroll.model.entities.CardEntity
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_item_card.view.*
 
 class CardListAdapter(private val context: Context, private val cards: List<CardEntity>) :
@@ -20,13 +17,10 @@ class CardListAdapter(private val context: Context, private val cards: List<Card
 
     lateinit var clickListener: ClickListener
 
-
-    fun setOnCardClickListener(newClickListener: ClickListener) {
-        clickListener = newClickListener
-    }
-
     private fun ViewGroup.inflate(layoutRes: Int): View {
-        return LayoutInflater.from(context).inflate(layoutRes, this, false)
+        return LayoutInflater
+            .from(context)
+            .inflate(layoutRes, this, false)
     }
 
     interface ClickListener {
@@ -45,29 +39,20 @@ class CardListAdapter(private val context: Context, private val cards: List<Card
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val card = LayoutInflater.from(context).inflate(R.layout.list_item_card, parent, false)
+        val card = LayoutInflater
+            .from(context)
+            .inflate(R.layout.list_item_card, parent, false)
                 as ConstraintLayout
 
-//        parent.setOnClickListener {
-//            val builder = AlertDialog.Builder(context)
-//            builder.setTitle("weee")
-//            builder.setView(R.layout.dialog_card)
-//            builder.setPositiveButton(
-//                "yeaah!",
-//                DialogInterface.OnClickListener { dialog, whichButton -> dialog.dismiss() })
-//            val dialog = builder.create()
-//            dialog.show()
-//        }
         return ViewHolder(card)
     }
-
-
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val cardName = cards[position].name
         val cardImage = cards[position].imageUrl
         val cardManaCost = cards[position].manaCost
         val cardText = cards[position].text
+
         holder.card.card_name.text = cardName
         loadImage(holder.card.card_image, cardImage)
 
@@ -77,34 +62,8 @@ class CardListAdapter(private val context: Context, private val cards: List<Card
             intent.putExtra("card_image", cardImage)
             intent.putExtra("card_mana_cost", cardManaCost)
             intent.putExtra("card_text", cardText)
-            intent.putExtra("current_position", position)
             context.startActivity(intent)
             }
-//        }) {
-//            val builder = AlertDialog.Builder(context)
-//            val inflater = layoutInflater
-//            val dialogLayout = inflater.inflate(R.layout.dialog_card, null)
-//            builder.setTitle(cardImage)
-//            builder.setView(R.layout.dialog_card)
-//            loadImage(holder.card.card_image, cardImage)
-//            builder.setPositiveButton(
-//                "yeaah!",
-//                DialogInterface.OnClickListener { dialog, whichButton -> dialog.dismiss() })
-//            val dialog = builder.create()
-//            dialog.show()
-//        }
-//
-//            .setOnCardClickListener(object: CardListAdapter.ClickListener {
-//                override fun onClick(pos: Int, view: View, card: CardEntity) {
-//                    val builder = AlertDialog.Builder(context)
-//                    dialogLayout.dialog_card_name.text = card.name
-//                    builder.setTitle("")
-//                    builder.setView(dialogLayout)
-//                    builder.setPositiveButton("yeaah!", DialogInterface.OnClickListener { dialog, whichButton -> dialog.dismiss()})
-//                    val dialog: AlertDialog = builder.create()
-//                    dialog.show()
-//                }
-//            })
 
         holder.card.tag = position
     }

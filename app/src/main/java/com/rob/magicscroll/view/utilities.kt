@@ -4,11 +4,11 @@ import android.widget.ImageView
 import com.rob.magicscroll.R
 import com.squareup.picasso.Picasso
 
-fun convertToHttps(imageUrl: String?) : String? {
-    return if (imageUrl?.substring(5) == "https") {
-        imageUrl
-    } else {
-        imageUrl?.replace("http", "https")
+fun convertToHttps(imageUrl: String?): String? {
+    return when {
+        imageUrl == "null" -> null
+        imageUrl?.substring(5) == "https" -> imageUrl
+        else -> imageUrl?.replace("http", "https")
     }
 }
 
