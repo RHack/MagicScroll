@@ -1,14 +1,13 @@
 package com.rob.magicscroll.view
 
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
-import android.util.Log
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.rob.magicscroll.R
 import com.rob.magicscroll.model.entities.CardEntity
@@ -42,12 +41,6 @@ class CardListAdapter(private val context: Context, private val cards: List<Card
         init {
             itemView.setOnClickListener(this)
         }
-
-        fun bind() = with(card) {
-            //            card.card_name.text = cards[adapterPosition].name
-//            loadImage(cards[adapterPosition].imageUrl, card.card_image)
-//            itemView.setOnClickListener(this)
-        }
     }
 
 
@@ -55,44 +48,65 @@ class CardListAdapter(private val context: Context, private val cards: List<Card
         val card = LayoutInflater.from(context).inflate(R.layout.list_item_card, parent, false)
                 as ConstraintLayout
 
-        parent.setOnClickListener {
-            val builder = AlertDialog.Builder(context)
-            builder.setTitle("weee")
-            builder.setView(R.layout.dialog_card)
-            builder.setPositiveButton(
-                "yeaah!",
-                DialogInterface.OnClickListener { dialog, whichButton -> dialog.dismiss() })
-            val dialog = builder.create()
-            dialog.show()
-        }
+//        parent.setOnClickListener {
+//            val builder = AlertDialog.Builder(context)
+//            builder.setTitle("weee")
+//            builder.setView(R.layout.dialog_card)
+//            builder.setPositiveButton(
+//                "yeaah!",
+//                DialogInterface.OnClickListener { dialog, whichButton -> dialog.dismiss() })
+//            val dialog = builder.create()
+//            dialog.show()
+//        }
         return ViewHolder(card)
     }
 
-    fun convertToHttps(imageUrl: String?) : String? {
-        return if (imageUrl?.substring(5) == "https") {
-            imageUrl
-        } else {
-            imageUrl?.replace("http", "https")
-        }
-    }
 
-    fun loadImage(cardImage: ImageView, imageUrl: String?) {
-        Picasso.get()
-            .load(convertToHttps(imageUrl))
-            .resize(100, 200)
-            .centerInside()
-            .placeholder(R.drawable.default_card)
-            .into(cardImage)
-    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.card.card_name.text = cards[position].name
-        loadImage(holder.card.card_image, cards[position].imageUrl)
+        val cardName = cards[position].name
+        val cardImage = cards[position].imageUrl
+        val cardManaCost = cards[position].manaCost
+        val cardText = cards[position].text
+        holder.card.card_name.text = cardName
+        loadImage(holder.card.card_image, cardImage)
 
-        Log.i("${holder.card.card_name.text}: ", "${cards[position].imageUrl}")
+        holder.card.setOnClickListener{
+            val intent = Intent(context, CardDetailActivity::class.java)
+            intent.putExtra("card_name", cardName)
+            intent.putExtra("card_image", cardImage)
+            intent.putExtra("card_mana_cost", cardManaCost)
+            intent.putExtra("card_text", cardText)
+            intent.putExtra("current_position", position)
+            context.startActivity(intent)
+            }
+//        }) {
+//            val builder = AlertDialog.Builder(context)
+//            val inflater = layoutInflater
+//            val dialogLayout = inflater.inflate(R.layout.dialog_card, null)
+//            builder.setTitle(cardImage)
+//            builder.setView(R.layout.dialog_card)
+//            loadImage(holder.card.card_image, cardImage)
+//            builder.setPositiveButton(
+//                "yeaah!",
+//                DialogInterface.OnClickListener { dialog, whichButton -> dialog.dismiss() })
+//            val dialog = builder.create()
+//            dialog.show()
+//        }
+//
+//            .setOnCardClickListener(object: CardListAdapter.ClickListener {
+//                override fun onClick(pos: Int, view: View, card: CardEntity) {
+//                    val builder = AlertDialog.Builder(context)
+//                    dialogLayout.dialog_card_name.text = card.name
+//                    builder.setTitle("")
+//                    builder.setView(dialogLayout)
+//                    builder.setPositiveButton("yeaah!", DialogInterface.OnClickListener { dialog, whichButton -> dialog.dismiss()})
+//                    val dialog: AlertDialog = builder.create()
+//                    dialog.show()
+//                }
+//            })
 
         holder.card.tag = position
-//        holder.bind()
     }
 
 

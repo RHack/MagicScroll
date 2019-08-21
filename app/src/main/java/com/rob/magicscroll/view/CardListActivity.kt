@@ -31,10 +31,12 @@ class CardListActivity : AppCompatActivity() {
     val subscriptions = CompositeDisposable()
     val cardListViewModel = App.injectCardListViewModel()
     val cards : List<CardEntity> = emptyList()
+    var recyclerPosition = 0
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var linearLayoutManager: LinearLayoutManager
     private var viewAdapter: CardListAdapter = CardListAdapter(this, emptyList())
+
 
 
     fun subscribe(disposable: Disposable): Disposable {
@@ -48,7 +50,10 @@ class CardListActivity : AppCompatActivity() {
         val context = this
         setContentView(R.layout.activity_card_list)
 
+
+
         linearLayoutManager = LinearLayoutManager(this)
+        linearLayoutManager.scrollToPosition(30)
 //        viewAdapter = CardListAdapter(cards)
         recyclerView = findViewById<RecyclerView>(R.id.card_list_rv).apply {
             setHasFixedSize(true)
@@ -56,25 +61,15 @@ class CardListActivity : AppCompatActivity() {
             adapter = viewAdapter
             layoutManager = linearLayoutManager
         }
-        viewAdapter.setOnCardClickListener(object: CardListAdapter.ClickListener {
-            override fun onClick(pos: Int, view: View, card: CardEntity) {
-                val builder = AlertDialog.Builder(context)
-                val inflater = layoutInflater
-                val dialogLayout = inflater.inflate(R.layout.dialog_card, null)
-                dialogLayout.dialog_card_name.text = card.name
-                builder.setTitle("")
-                builder.setView(dialogLayout)
-                builder.setPositiveButton("yeaah!", DialogInterface.OnClickListener { dialog, whichButton -> dialog.dismiss()})
-                val dialog: AlertDialog = builder.create()
-                dialog.show()
-            }
-        })
 
 
     }
 
     override fun onStart() {
         super.onStart()
+
+
+
         subscribe(cardListViewModel.getCards()
             .subscribeOn(Schedulers.io())
             .subscribeOn(Schedulers.io())
@@ -91,6 +86,11 @@ class CardListActivity : AppCompatActivity() {
     fun showCards(cardList: CardList) {
         if (cardList.error == null) {
             recyclerView.adapter = CardListAdapter(this, cardList.cards)
+            if(intent.extras != null) {
+                recyclerPosition = intent.extras?.get("current_position").toString().toInt()
+
+                linearLayoutManager.scrollToPosition(recyclerPosition)
+            }
         } else if (cardList.error is ConnectException || cardList.error is UnknownHostException) {
             Log.e("Network Error", "Connection Lost", cardList.error)
         } else {

@@ -15,7 +15,7 @@ class CardListViewModel(private val cardRepository: CardRepository): ViewModel()
 
     fun getCards(): Observable<CardList> {
         return cardRepository.getCards().map {
-            CardList(it.cardEntities.take(20), "20 cards")
+            CardList(it.cardEntities.take(100), "100 cards")
         }.onErrorReturn {
             CardList(emptyList(), "ERROR", it)
         }

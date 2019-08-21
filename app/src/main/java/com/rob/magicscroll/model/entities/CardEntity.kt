@@ -11,8 +11,8 @@ data class CardEntity(
     val name: String?,
 //    @SerializedName("names")
 //    var names: List<String>? = null
-//    @SerializedName("manaCost")
-//    var manaCost: String? = null
+    @SerializedName("manaCost")
+    val manaCost: String?,
 //    @SerializedName("cmc")
 //    var cmc: Int? = null
 //    @SerializedName("colors")
@@ -31,8 +31,8 @@ data class CardEntity(
 //    var rarity: String? = null
 //    @SerializedName("set")
 //    var set: String? = null
-//    @SerializedName("text")
-//    var text: String? = null
+    @SerializedName("text")
+    val text: String?,
 //    @SerializedName("artist")
 //    var artist: String? = null
 //    @SerializedName("number")
