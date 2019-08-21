@@ -45,15 +45,15 @@ class CardListAdapter(private val context: Context, private val cards: List<Card
 
         // Set the card name and image on the viewHolder
         holder.card.card_name.text = cardName
-        loadImage(holder.card.card_image, cardImage, 100)
+        loadImage(holder.card.card_image, cardImage, CARD_SIZE)
 
         // When clicked, open CardDetailActivity with card data given
         holder.card.setOnClickListener {
             val intent = Intent(context, CardDetailActivity::class.java)
-            intent.putExtra("card_name", cardName)
-            intent.putExtra("card_image", cardImage)
-            intent.putExtra("card_mana_cost", cardManaCost)
-            intent.putExtra("card_text", cardText)
+            intent.putExtra(CARD_NAME, cardName)
+            intent.putExtra(CARD_IMAGE, cardImage)
+            intent.putExtra(CARD_MANA_COST, cardManaCost)
+            intent.putExtra(CARD_TEXT, cardText)
             context.startActivity(intent)
         }
     }
