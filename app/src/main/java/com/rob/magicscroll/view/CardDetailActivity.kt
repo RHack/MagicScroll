@@ -7,8 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.rob.magicscroll.R
 
 class CardDetailActivity : AppCompatActivity() {
-    private var recyclerPosition = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_card_detail)
@@ -16,10 +14,10 @@ class CardDetailActivity : AppCompatActivity() {
         val card: Bundle? = intent.extras
 
         // Unload card data received from the adapter
-        val cardName = card?.get("card_name").toString()
-        val cardManaCost = card?.get("card_mana_cost").toString()
-        val cardImage = card?.get("card_image").toString()
-        val cardText = card?.get("card_text").toString()
+        val cardName = card?.get(CARD_NAME).toString()
+        val cardManaCost = card?.get(CARD_MANA_COST).toString()
+        val cardImage = card?.get(CARD_IMAGE).toString()
+        val cardText = card?.get(CARD_TEXT).toString()
 
         val cardNameTextView = findViewById<TextView>(R.id.detail_card_name)
         val cardManaCostTextView = findViewById<TextView>(R.id.detail_card_mana_cost)
@@ -28,7 +26,7 @@ class CardDetailActivity : AppCompatActivity() {
 
         cardNameTextView.text = cardName
         cardManaCostTextView.text = cardManaCost
-        loadImage(cardImageImageView, cardImage, 700)
+        loadImage(cardImageImageView, cardImage, DETAIL_CARD_SIZE)
         cardTextTextView.text = cardText
     }
 }

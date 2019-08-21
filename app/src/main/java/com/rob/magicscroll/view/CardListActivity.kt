@@ -74,14 +74,14 @@ class CardListActivity : AppCompatActivity() {
     override fun onSaveInstanceState(state: Bundle) {
         super.onSaveInstanceState(state)
         recyclerPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition()
-        state.putInt("recycler_position", recyclerPosition)
+        state.putInt(RECYCLER_POSITION, recyclerPosition)
     }
 
     // Load the saved position of the recyclerView
     override fun onRestoreInstanceState(state: Bundle) {
         super.onRestoreInstanceState(state)
-        if (state != null) {
-            recyclerPosition = state.getInt("recycler_position")
+        if (state != NULL_STATE) {
+            recyclerPosition = state.getInt(RECYCLER_POSITION)
         }
     }
 
