@@ -4,6 +4,7 @@ import android.widget.ImageView
 import com.rob.magicscroll.R
 import com.squareup.picasso.Picasso
 
+// Correct cards' image urls to be properly displayed
 fun convertToHttps(imageUrl: String?): String? {
     return when {
         imageUrl == "null" -> null
@@ -12,6 +13,7 @@ fun convertToHttps(imageUrl: String?): String? {
     }
 }
 
+// Load images from their url into the given imageView
 fun loadImage(cardImage: ImageView, imageUrl: String?) {
     Picasso.get()
         .load(convertToHttps(imageUrl))

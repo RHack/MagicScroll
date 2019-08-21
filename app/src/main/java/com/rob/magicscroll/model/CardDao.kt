@@ -11,7 +11,7 @@ interface CardDao {
     fun getCards(): Single<CardEntityList>
 
     @Query("SELECT COUNT(cardEntities) FROM cardList")
-    fun countCards() : Int
+    fun countCards(): Int
 
     @Query("SELECT * FROM cards WHERE name LIKE :cardName")
     fun findCardByName(cardName: String): CardEntity

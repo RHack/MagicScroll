@@ -1,6 +1,5 @@
 package com.rob.magicscroll.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
@@ -16,6 +15,7 @@ class CardDetailActivity : AppCompatActivity() {
 
         val card: Bundle? = intent.extras
 
+        // Unload card data received from the adapter
         val cardName = card?.get("card_name").toString()
         val cardManaCost = card?.get("card_mana_cost").toString()
         val cardImage = card?.get("card_image").toString()

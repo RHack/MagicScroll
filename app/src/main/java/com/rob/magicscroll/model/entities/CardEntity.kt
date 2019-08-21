@@ -9,10 +9,17 @@ import com.google.gson.annotations.SerializedName
 data class CardEntity(
     @SerializedName("name")
     val name: String?,
-//    @SerializedName("names")
-//    var names: List<String>? = null
     @SerializedName("manaCost")
     val manaCost: String?,
+    @SerializedName("text")
+    val text: String?,
+    @SerializedName("imageUrl")
+    val imageUrl: String?,
+    @PrimaryKey
+    @SerializedName("id")
+    val id: String
+//    @SerializedName("names")
+//    var names: List<String>? = null
 //    @SerializedName("cmc")
 //    var cmc: Int? = null
 //    @SerializedName("colors")
@@ -31,8 +38,6 @@ data class CardEntity(
 //    var rarity: String? = null
 //    @SerializedName("set")
 //    var set: String? = null
-    @SerializedName("text")
-    val text: String?,
 //    @SerializedName("artist")
 //    var artist: String? = null
 //    @SerializedName("number")
@@ -45,8 +50,6 @@ data class CardEntity(
 //    var layout: String? = null
 //    @SerializedName("multiverseid")
 //    var multiverseid: Int? = null
-    @SerializedName("imageUrl")
-    val imageUrl: String?,
 //    @SerializedName("rulings")
 //    var rulings: List<RulingEntity>? = null
 //    @SerializedName("foreignNames")
@@ -57,8 +60,5 @@ data class CardEntity(
 //    var originalText: String? = null
 //    @SerializedName("originalType")
 //    var originalType: String? = null
-    @PrimaryKey
-    @SerializedName("id")
-    val id: String
 )
 

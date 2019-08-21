@@ -4,20 +4,13 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.Observable
 import com.rob.magicscroll.repository.CardRepository
 
-class CardListViewModel(private val cardRepository: CardRepository): ViewModel() {
-    fun getCard(): Observable<CardList>? {
-        return cardRepository.getCards().map {
-            CardList(it.cardEntities.take(1), "1 card")
-        }?.onErrorReturn {
-            CardList(emptyList(), "ERROR", it)
-        }
-    }
-
+class CardListViewModel(private val cardRepository: CardRepository) : ViewModel() {
+    // Get 100 cards from the repository
     fun getCards(): Observable<CardList> {
         return cardRepository.getCards().map {
-            CardList(it.cardEntities.take(100), "100 cards")
+            CardList(it.cardEntities.take(100), "Successfully retrieved 100 cards from the repository")
         }.onErrorReturn {
-            CardList(emptyList(), "ERROR", it)
+            CardList(emptyList(), "ERROR: getCards() failed, ", it)
         }
     }
 }
